@@ -1,113 +1,167 @@
 import Image from "next/image";
+import home from '@/styles/home.module.css'
+import ReactDOM from 'react-dom'
+import mongoose from 'mongoose';
 
-export default function Home() {
+// Components
+import ButtonView from '@components/app.btnView'
+import DogCard from '@components/app.dogCard'
+import ProductCard from '@components/app.productCard'
+import Slider from '@components/app.swiperLogo'
+import NewsCard from '@components/app.newsCard'
+// Pictures & Icons
+import banner1 from '../../public/img/home-banner-1.png'
+import banner2 from '../../public/img/home-banner-2.png'
+import banner3 from '../../public/img/home-banner-3.png'
+
+import { connectToDB } from "@utils/database";
+import { faPlay, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
+async function getData() {
+  await connectToDB()
+  
+  try {
+    const database = mongoose.connection.db;
+    const collection = database.collection('Pets');
+    const result = await collection.find({}).toArray();
+    
+    return result; // Trả về dữ liệu đã chuyển đổi
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+export default async function Home() {
+  const data = await getData()
+
+  if(!data){
+    return
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main id="home" className="relative">
+      <section className="relative font-poppins">
+        <div className="h-full">
+          <Image src={banner1} alt="home-banner" />
         </div>
-      </div>
+        <div className="absolute w-2/5 left-11 top-28 lg:top-52 flex flex-col gap-6 font-poppins">
+        <div className=" title flex flex-col gap-3 primary-color">
+          <p className="text-4xl lg:text-6xl font-extrabold">One more friend</p>
+          <p className="text-3xl lg:text-5xl font-bold">Thousands more fun!</p>
+        </div>
+        <div className="content poppins-medium flex flex-col gap-3">
+          <p>Having a pet means you have more joy, a new friend, a happy person who will always be with you to have fun. We have 200+ different pets that can meet your needs!</p>
+          <div className="flex gap-4">
+            <ButtonView typeBtn="outline-btn" content="View Intro" iconName={faPlay}/>
+            <ButtonView typeBtn="primary-color-btn" content="Explore now"/>
+          </div>  
+          </div>  
+        </div>
+        
+        
+        
+      </section>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <section className="responsive-section font-poppins">
+        <div>
+          <p className="">Whats new?</p>
+          <div className="flex justify-between">
+            <p className="font-bold text-2xl primary-color">Take a look at some of our pets</p>
+            <ButtonView typeBtn="outline-btn" content="View more" iconName={faChevronRight}/>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-5">
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+          <DogCard/>
+        </div>
+      </section>
+      <section className="responsive-section -mt-20 -mb-12 lg:-mb-20 relative">
+        <div>
+          <Image
+          src={banner2}
+          alt="home banner 2"
+          className="rounded-lg"
+          />
+        </div>
+        <div className="absolute w-1/3 right-16 lg:right-36 top-12 lg:top-28 flex flex-col gap-3 lg:gap-6 font-poppins text-right">
+        <div className=" title flex flex-col gap-3 primary-color">
+          <p className="text-3xl lg:text-5xl font-extrabold">One more friend</p>
+          <p className="text-2xl lg:text-4xl font-bold">Thousands more fun!</p>
+        </div>
+        <div className="content poppins-medium flex flex-col gap-3">
+          <p className="">Having a pet means you have more joy, a new friend, a happy person who will always be with you to have fun. We have 200+ different pets that can meet your needs!</p>
+          <div className="flex gap-4 justify-end">
+            <ButtonView typeBtn="outline-btn" content="View Intro" iconName={faPlay}/>
+            <ButtonView typeBtn="primary-color-btn" content="Explore now"/>
+          </div>  
+          </div>  
+        </div>
+      </section>
+      <section className="responsive-section font-poppins">
+      <div>
+          <p className="">Hard to choose right products for your pets?</p>
+          <div className="flex justify-between">
+            <p className="font-bold text-2xl primary-color">Our Products</p>
+            <ButtonView typeBtn="outline-btn" content="View more" iconName={faChevronRight}/>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-5">
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+          <ProductCard/>
+        </div>
+      </section>
+      <section className="responsive-section font-poppins flex flex-col gap-5 relative">  
+        <div className="flex justify-between">
+          <p className="">Proud to be part of <span className="primary-color font-bold text-2xl">Pet Sellers</span></p>
+          <ButtonView typeBtn="outline-btn" content="View all our sellers" iconName={faChevronRight}/>
+        </div>
+        <Slider/>
+        <div className="relative">
+        <div className="h-full">
+          <Image src={banner3} alt="home-banner" />
+        </div>
+        <div className="absolute w-1/3 top-[40px] left-[40px] flex flex-col gap-6 font-poppins">
+          <div className=" title flex flex-col gap-3 primary-color">
+            <p className="text-3xl lg:text-5xl font-extrabold">Adoption</p>
+            <p className="text-2xl lg:text-4xl font-bold">We need help. so do they.</p>
+          </div>
+          <div className="content poppins-medium flex flex-col gap-3">
+            <p className="">Adopt a pet and give it a home, <br />
+            it will be love you back unconditionally.</p>
+            <div className="flex gap-4">
+            <ButtonView typeBtn="primary-color-btn" content="Explore now"/>
+              <ButtonView typeBtn="outline-btn" content="View Intro" iconName={faPlay}/>
+            </div>  
+            </div>  
+        </div>
+        </div>
+      </section>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <section className="responsive-section font-poppins">
+      <div>
+          <p className="">You already know ?</p>
+          <div className="flex justify-between">
+            <p className="font-bold text-2xl primary-color">Useful pet knowledge</p>
+            <ButtonView typeBtn="outline-btn" content="View more" iconName={faChevronRight}/>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-5">
+          <NewsCard/>
+          <NewsCard/>
+          <NewsCard/>
+        </div>
+      </section>
     </main>
   );
 }
+

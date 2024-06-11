@@ -1,0 +1,15 @@
+
+.header li a{
+    text-decoration: none;
+}
+.banner3{
+    position: relative;
+    margin-top: -5rem;
+    background-image: url('../../public/img/home-banner-3.png');
+    background-repeat: no-repeat;
+    height: 378px;
+    padding: 80px;
+}
+.responsiveSection{
+    padding: 80px;
+}
