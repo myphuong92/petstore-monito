@@ -4,7 +4,6 @@ import Image from "next/image";
 // Data
 import { connectToDB } from "@utils/database";
 import mongoose from 'mongoose';
-import api from '../app/api/pets'
 import { useState } from 'react';
 // Component
 import DogCard from './app.dogCard'
@@ -38,7 +37,7 @@ type Pet = {
 //   }
 // }
 
-const itemsPerPage = 6;
+const itemsPerPage = 9;
 
 type Props = {}
 
@@ -49,7 +48,10 @@ const DogList = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch('/api/pets'); // Gọi API route
+          const response = await fetch('/api/pets');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
           const data = await response.json();
           setPets(data);
         } catch (error) {
