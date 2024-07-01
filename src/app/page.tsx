@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from 'react';
+
 import Image from "next/image";
 import home from '@/styles/home.module.css'
 import ReactDOM from 'react-dom'
@@ -17,25 +19,45 @@ import banner3 from '../../public/img/home-banner-3.png'
 import { connectToDB } from "@utils/database";
 import { faPlay, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-async function getData() {
-  await connectToDB()
+type Pet = {
+  _id: string;
+  Name: string;
+  Gender: string;
+  Age: string;
+  Price: string;
+  Images: string[];
+};
+async function getData(): Promise<Pet[]> {
+  await connectToDB();
   
   try {
     const database = mongoose.connection.db;
     const collection = database.collection('Pets');
-    const result = await collection.find({}).toArray();
+    const result = await collection
+                  .find({})
+                  .sort({ PublishedDate: -1 }) // Sort by PublishedDate descending
+                  .limit(8) // Limit to 6 documents
+                  .toArray();
     
-    return result; // Trả về dữ liệu đã chuyển đổi
+    return result.map(item => ({
+      _id: item._id.toString(),
+      Name: item.Name,
+      Gender: item.Gender,
+      Age: item.Age,
+      Price: item[" Price "].trim(),
+      Images: item.Images,
+    }));
   } catch (error) {
     console.error('Error:', error);
+    return [];
   }
 }
 export default async function Home() {
-  const data = await getData()
-
+  const data = await getData();
   if(!data){
     return
   }
+  console.log(data);
   return (
     <main id="home" className="relative">
       <section className="relative font-poppins">
@@ -69,14 +91,17 @@ export default async function Home() {
           </div>
         </div>
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-5">
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
-          <DogCard/>
+        {data.map(pet => (
+            <DogCard
+              key={pet._id}
+              id={pet._id.toString()}
+              name={pet.Name}
+              gender={pet.Gender}
+              age={pet.Age}
+              price={pet.Price}
+              imageUrl={pet.Images[0]} // Lấy hình ảnh đầu tiên làm đại diện
+            />
+          ))}
         </div>
       </section>
       <section className="responsive-section -mt-20 -mb-12 lg:-mb-20 relative">

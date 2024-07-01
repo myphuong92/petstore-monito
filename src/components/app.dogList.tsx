@@ -1,60 +1,88 @@
-import React from 'react'
+'use client'
+import React, { useEffect } from 'react';
 import Image from "next/image";
-
+// Data
+import { connectToDB } from "@utils/database";
+import mongoose from 'mongoose';
+import api from '../app/api/pets'
 import { useState } from 'react';
 // Component
 import DogCard from './app.dogCard'
-const dogs = [
-    {
-      id: 'MO231',
-      name: 'Pomeranian White',
-      gender: 'Male',
-      age: '02 months',
-      price: '6.900.000',
-      imageUrl: '/img/card-img.png', // Đảm bảo đường dẫn đúng
-    },
-    {
-      id: 'MO232',
-      name: 'Poodle Tiny Sepia',
-      gender: 'Female',
-      age: '03 months',
-      price: '7.500.000',
-      imageUrl: '/img/card-img.png', // Đảm bảo đường dẫn đúng
-    },
-    
-    // Thêm các đối tượng chó khác ở đây
-  ];
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+type Pet = {
+  _id: string;
+  Name: string;
+  Gender: string;
+  Age: string;
+  Price: string;
+  Images: string[];
+};
+// async function getData(): Promise<Pet[]> {
+//   await connectToDB();
+  
+//   try {
+//     const database = mongoose.connection.db;
+//     const collection = database.collection('Pets');
+//     const result = await collection.find({}).toArray();
+//     return result.map(item => ({
+//       _id: item._id.toString(),
+//       Name: item.Name,
+//       Gender: item.Gender,
+//       Age: item.Age,
+//       Price: item[" Price "].trim(),
+//       Images: item.Images,
+//     }));
+//   } catch (error) {
+//     console.error('Error:', error);
+//     return [];
+//   }
+// }
+
 const itemsPerPage = 6;
 
 type Props = {}
 
-const DogList = (props: Props) => {
+const DogList = () => {
+  
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [pets, setPets] = useState<Pet[]>([]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('/api/pets'); // Gọi API route
+          const data = await response.json();
+          setPets(data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentDogs = dogs.slice(startIndex, endIndex);
+    const currentDogs = pets.slice(startIndex, endIndex);
 
-    const totalPages = Math.ceil(dogs.length / itemsPerPage);
-  
+    const totalPages = Math.ceil(pets.length / itemsPerPage);
+
   return (
     
     <div className='container mx-auto'>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-5'>
-        {currentDogs.map(dog => (
-            <DogCard
-                key={dog.id}
-                id={dog.id}
-                name={dog.name}
-                gender={dog.gender}
-                age={dog.age}
-                price={dog.price}
-                imageUrl={dog.imageUrl}
-            />
+      {currentDogs.map(pet => (
+          <DogCard
+            key={pet._id}
+            id={pet._id}
+            name={pet.Name}
+            gender={pet.Gender}
+            age={pet.Age}
+            price={pet.Price}
+            imageUrl={pet.Images[0]} // Lấy hình ảnh đầu tiên làm đại diện
+          />
         ))}
       </div>
       <div className='flex justify-center mt-4'>
@@ -72,4 +100,4 @@ const DogList = (props: Props) => {
   )
 }
 
-export default DogList
+export default DogList;

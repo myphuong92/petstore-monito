@@ -16,13 +16,13 @@ const Cards = (props: Props) => {
   return (
     <div className='flex flex-col gap-5 bg-white rounded-lg shadow-lg p-3'>
         <div className='card-img rounded-lg'>
-        <Image
-          src={props.imageUrl || dog1}
-          alt={props.name || 'dog1'}
-          className='rounded-lg'
-          width={300}
-          height={200}
-        />
+            <Image
+            src={props.imageUrl || dog1}
+            alt={props.name || 'dog1'}
+            className='rounded-lg h-[250px] object-cover'
+            width={250}
+            height={250}
+            />
             
         </div>
         <div className='card-content font-poppins flex flex-col gap-1'>

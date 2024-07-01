@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import mongoose from 'mongoose';
+// Data
+import { connectToDB } from "@utils/database";
 
 // Icons
 import { faPlay, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -18,12 +20,11 @@ import DogList from'@components/app.dogList'
 
 // register Swiper custom elements
 
-
 type Props = {}
 
 const Category = (props: Props) => {
 
-
+  
   // useEffect(() => {
   //   // Ensure swiperElRef.current is not null before adding event listeners
   //   if (swiperElRef.current) {
