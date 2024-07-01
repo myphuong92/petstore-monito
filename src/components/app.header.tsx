@@ -12,7 +12,7 @@ const AppHeader = ()=>{
                 <div className="nav-links md:bg-inherit min-h-fit w-auto md:flex items-center px-5">
                     <ul className="header-line primary-color flex flex-row  items-center gap-6 lg:gap-[4vw] font-bold ">
                         <Link href={'/'}>Home</Link>
-                        <Link href={'/'}>Category</Link>
+                        <Link href={'/category'}>Category</Link>
                         <Link href={'/'}>About</Link>
                         <Link href={'/'}>Contact</Link>
                         
